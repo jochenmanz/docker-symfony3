@@ -26,6 +26,12 @@ RUN pecl install imagick mailparse && \
     docker-php-ext-install -j$(nproc) soap && \
     docker-php-ext-enable mailparse
 
+RUN curl -sL https://deb.nodesource.com/setup_11.x | bash - \
+        && DEBIAN_FRONTEND=noninteractive apt-get install nodejs --no-install-recommends -yqq \
+        && npm i -g npm \
+        && curl -o- -L https://yarnpkg.com/install.sh | bash \
+        && chmod a+x $HOME/.yarn/bin/yarn
+
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
